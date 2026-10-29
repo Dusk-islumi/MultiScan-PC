@@ -1,0 +1,31 @@
+# Android / Gradle build outputs
+android/.gradle/
+android/build/
+android/.kotlin/
+android/local.properties
+*.apk
+*.aab
+*.ap_
+*.dex
+captures/
+
+# Signing material (never commit)
+*.keystore
+*.jks
+keystore.properties
+
+# Windows receiver build output and runtime files
+pc-receiver/PcReceiver.exe
+releases/PcReceiver.ini
+releases/PcReceiver.log
+releases/PcReceiver.log.old
+
+# IDE / OS
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Release artifacts under releases/ are intentionally tracked
+!releases/*.apk
+!releases/*.exe
