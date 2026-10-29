@@ -18,6 +18,21 @@ MultiScan-PC/
 └─ README.md
 ```
 
+## 支持的码制
+
+当前 App **只启用 Code 128**。解码底座与原版相同，是 [zxing-cpp](https://github.com/zxing-cpp/zxing-cpp)
+（Android 依赖 `io.github.zxing-cpp:android:3.1.1`，package `zxingcpp`，不是 Java 版 `com.google.zxing`）。
+zxing-cpp 本身支持 Code 39/93、EAN、UPC、ITF、Codabar、QR、Data Matrix、Aztec、PDF417 等，
+但本项目在 `android/src/main/java/com/example/multiscan/scan/decode/BarcodeDecoder.kt`
+的 pass1 / pass2 两处 `Options(formats = ...)` 中限定为 `Format.CODE_128`。
+
+需要其它码制时，可自行修改两处 `formats`（例如
+`setOf(Format.CODE_128, Format.CODE_39, Format.EAN_13, Format.QR_CODE)`），
+把 `Detection.format` 从固定 `FORMAT_CODE128` 改为 `result.format.name`
+（枚举名形如 `CODE_128`，与现有 `Code128` 不同），并同步记录页/发送逻辑里的格式文案，
+然后重新执行 `cd android && ./gradlew assembleDebug`。Windows 接收器不解析码制，只接收字符串并逐条输入，
+因此只要手机端能解出，接收器端无需改动。
+
 ## 系统要求
 
 | 端 | 要求 |
@@ -255,6 +270,7 @@ build.bat
 
 ## 已知限制
 
+- **仅启用 Code 128**：其它码制需修改 App 源码后重新构建；Windows 接收器本身与码制无关。
 - **无鉴权**：同一局域网内任何设备都能触发输入，仅适合可信网络。
 - 仅支持向**当前前台窗口**输入，无法指定目标进程。
 - 同一时刻只处理一个批次（409 忙），不支持多手机并发输入。
